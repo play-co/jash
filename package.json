@@ -1,0 +1,23 @@
+{
+  "author": "",
+  "name": "jash",
+  "description": "node for commandline scripting",
+  "version": "0.1.0",
+  "homepage": "http://github.com/gameclosure/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gameclosure/jash.git"
+  },
+  "bin": {
+    "jash": "./src/bin.js"
+  },
+  "main": "./src/jash.js",
+  "dependencies": {
+	  "underscore": "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
