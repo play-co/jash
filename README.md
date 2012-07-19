@@ -19,3 +19,11 @@
   long running processes and the like
 
 	$.tail('-f', '/var/log/foo.log', getStreamConsumer(), getStreamConsumer());
+
+  Since the child process is returned, you can also do whatever you want:
+
+    var child = $.ls('-l', '/tmp/foo');
+    child.stdout.on ...
+    child.stderr.on ...
+    child.on('exit' ...
+
