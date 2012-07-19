@@ -54,48 +54,47 @@ var env = process.env;
 function runCommand(name, args, cb, stdoutHandler, stderrHandler) {
 	//if we dont actually have stdout and stderr, try to get the cb
 	//if there was no callback passed, used a default
-	cb = cb || function() {};
-	var out = '';
-	var err = '';
 	var child = spawn(name, args, {
 		cwd:cwd,
 		env: env
 	});
-	cwd = '.';
-	//we need to wait for process.exit, stdout.end, and stderr.end before
-	//we return
-	var waiting = 3;
-	var returnArgs = [null, null, null];
+	if (cb) {
+		var out = '';
+		var err = '';
+		cwd = '.';
+		//we need to wait for process.exit, stdout.end, and stderr.end before
+		//we return
+		var waiting = 3;
+		var returnArgs = [null, null, null];
 
-	var fire = function(index, arg) {
-		returnArgs[index] = arg;
-		if (--waiting === 0) {
-			cb.apply(undefined, returnArgs);
-		}
-	};
-	//buffer stdout and stderr to pass to the completion callback
-	stdoutHandler = stdoutHandler || function(data) {
-		out += data;
-	};
+		var fire = function(index, arg) {
+			returnArgs[index] = arg;
+			if (--waiting === 0) {
+				cb.apply(undefined, returnArgs);
+			}
+		};
+		//buffer stdout and stderr to pass to the completion callback
+		stdoutHandler = stdoutHandler || function(data) {
+			out += data;
+		};
 
-	stderrHandler = stderrHandler || function(data) {
-		err += data;
-	};
-	child.stdout.setEncoding('utf8');
-	child.stdout.on('data', stdoutHandler); 
-	child.stdout.on('end', function() {fire(1, out); });
-			
-	child.stderr.setEncoding('utf8');
-	child.stderr.on('data', stderrHandler);
-	child.stderr.on('end', function() {fire(2, err); });
+		stderrHandler = stderrHandler || function(data) {
+			err += data;
+		};
+		child.stdout.setEncoding('utf8');
+		child.stdout.on('data', stdoutHandler); 
+		child.stdout.on('end', function() {fire(1, out); });
+				
+		child.stderr.setEncoding('utf8');
+		child.stderr.on('data', stderrHandler);
+		child.stderr.on('end', function() {fire(2, err); });
 
-	//when the process exits, call the callback with the exit status,
-	//stdout contents, and stderr contents
-	
-	child.on('exit', function(code) {
-		fire(0, code);
-	});
+		child.on('exit', function(code) {
+			fire(0, code);
+		});
+	}
 
+	return child;
 
 }
 
