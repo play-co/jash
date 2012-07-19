@@ -131,6 +131,11 @@ function addBinaries(binaries) {
 				cb = args.pop();
 				argsToRemove = 1;
 			}
+			//if the first argument was an array, the args were passed as
+			//an array
+			if (args[0] instanceof Array) {
+				args = args[0];
+			}
 			
 			runCommand(name, args, cb, stdoutHandler, stderrHandler);
 
