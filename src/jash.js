@@ -51,17 +51,15 @@ var env = process.env;
  * with commandline arguments args
  * call cb on completion
  */
-function runCommand(name, args, cb, stdoutHandler, stderrHandler) {
+function runCommand(name, args, options, cb, stdoutHandler, stderrHandler) {
 	//if we dont actually have stdout and stderr, try to get the cb
 	//if there was no callback passed, used a default
-	var child = spawn(name, args, {
-		cwd:cwd,
-		env: env
-	});
+
+	options = options || { cwd : cwd, env: env };
+	var child = spawn(name, args, options);
 	if (cb) {
 		var out = '';
 		var err = '';
-		cwd = '.';
 		//we need to wait for process.exit, stdout.end, and stderr.end before
 		//we return
 		var waiting = 3;
@@ -114,7 +112,7 @@ function addBinaries(binaries) {
 			var args = Array.prototype.slice.call(arguments);
 			var argLength = args.length;
 		
-			var cb, stdoutHandler, stderrHandler;
+			var cb, stdoutHandler, stderrHandler, options;
 			if (args[argLength-3] instanceof Function) {
 				//we have all 3
 				stderrHandler = args.pop();
@@ -131,13 +129,18 @@ function addBinaries(binaries) {
 				cb = args.pop();
 				argsToRemove = 1;
 			}
+
+			//if the last arg is an object, it's the options object
+			if (typeof args[args.length-1] == 'object') {
+				options = args.pop();
+			}
 			//if the first argument was an array, the args were passed as
 			//an array
 			if (args[0] instanceof Array) {
 				args = args[0];
 			}
 			
-			runCommand(name, args, cb, stdoutHandler, stderrHandler);
+			return runCommand(name, args, options, cb, stdoutHandler, stderrHandler);
 
 		};})();
 	}
