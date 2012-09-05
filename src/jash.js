@@ -99,6 +99,7 @@ function runCommand(name, args, options, cb, stdoutHandler, stderrHandler) {
 //for all the binaries in the path, setup a proxy function with the binary's
 //name that will execute it.
 function addBinaries(binaries) {
+	var SLICE = Array.prototype.slice;
 	//iterate backwards to mimic normal resolution order
 	for (var i = binaries.length-1; i >= 0; i--) {
 		var parts = binaries[i].split('/');
@@ -107,9 +108,9 @@ function addBinaries(binaries) {
 
 			//grab the last argument, which might be a callback
 
-			var cbs = Array.prototype.slice.call(arguments, 3);
+			var cbs = SLICE.call(arguments, 3);
 			//assume none of the args we got were handlers
-			var args = Array.prototype.slice.call(arguments);
+			var args = SLICE.call(arguments);
 			var argLength = args.length;
 		
 			var cb, stdoutHandler, stderrHandler, options;
@@ -118,16 +119,13 @@ function addBinaries(binaries) {
 				stderrHandler = args.pop();
 				stdoutHandler = args.pop();
 				cb = args.pop();
-				argsToRemove = 3;
 			} else if (arguments[argLength-2] instanceof Function) {
 				//we have cb and stdout 
 				stdoutHandler = args.pop();
 				cb = args.pop();
-				argsToRemove = 2;
 			} else if (arguments[argLength-1] instanceof Function) {
 				//we have cb only
 				cb = args.pop();
-				argsToRemove = 1;
 			}
 
 			//if the last arg is an object, it's the options object
@@ -154,15 +152,4 @@ addBinaries(binaries);
 exports.addPath = function(path) {
 	var binaries = findBinaries(path);
 	addBinaries(binaries);
-};
-
-//$.cd is special - commands will be run in this directory
-//it can also be chained
-exports.cd = function(path) {
-	cwd = path;
-	return this;
-};
-
-exports.setEnv = function(newEnv) {
-	env = newEnv;
 };
