@@ -58,27 +58,34 @@ function runCommand(name, args, options, cb, stdoutHandler, stderrHandler) {
 	options = options || { cwd : cwd, env: env };
 	var child = spawn(name, args, options);
 	if (cb) {
-		var out = '';
-		var err = '';
+		var out = null;
+		var err = null;
 		//we need to wait for process.exit, stdout.end, and stderr.end before
 		//we return
 		var waiting = 3;
-		var returnArgs = [null, null, null];
+		var returnArgs = [];
 
 		var fire = function(index, arg) {
-			returnArgs[index] = arg;
+			if (arg != null) {
+				returnArgs[index] = arg;
+			}
 			if (--waiting === 0) {
 				cb.apply(undefined, returnArgs);
 			}
 		};
 		//buffer stdout and stderr to pass to the completion callback
-		stdoutHandler = stdoutHandler || function(data) {
-			out += data;
-		};
-
-		stderrHandler = stderrHandler || function(data) {
-			err += data;
-		};
+		if (!stdoutHandler) {
+			out = '';
+			stdoutHandler = function(data) {
+				out += data;
+			};
+		}
+		if (!stderrHandler) {
+			err = '';
+			stderrHandler = function(data) {
+				err += data;
+			};
+		}
 		child.stdout.setEncoding('utf8');
 		child.stdout.on('data', stdoutHandler); 
 		child.stdout.on('end', function() {fire(1, out); });
