@@ -1,4 +1,4 @@
-var $ = require('../jash');
+var $ = require('../src/jash');
 
 var getConsumer = function() {
 	var i = 0;
