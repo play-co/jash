@@ -1,6 +1,5 @@
- 
-  jash.js allows you to more easily use node as a shell scripting facility
-  it looks up all executables in your path and adds them to exports.
+  jash.js allows you to more easily use node as a shell scripting facility.
+  It will collate all
  
   You can then call any commandline utility like this:
  
@@ -10,7 +9,7 @@
   	}
 
 	var getStreamConsumer = function() {
-			return unction(data) {
+			return function(data) {
 				console.log('I got some data!', data);
 			};
 	};
@@ -25,5 +24,29 @@
     var child = $.ls('-l', '/tmp/foo');
     child.stdout.on ...
     child.stderr.on ...
-    child.on('exit' ...
+    child.on('exit') ...
 
+
+  The full API:
+
+    $.cmd(arg1, arg2, arg3, [options],[cb [, stdoutHandler, stdErrHandler]]);
+
+  where *options* is the options argument passed to child_process.spawn:
+  http://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options
+
+  arguments can also be passed in an array as the first argument:
+
+    $.cmd([arg1, arg2, arg3], ...
+
+  When only one callback is passed, *cb* is a function that takes 3 arguments:
+
+    function(statusCode, stdout, stderr) { ...
+
+  You can also pass 3 callbacks:
+
+    cb = function(statusCode) ...
+    stdout = function(data) ...
+	stderr = function(data) ...
+
+
+Why $?  You're running shell commands!
