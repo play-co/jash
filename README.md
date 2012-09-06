@@ -1,7 +1,8 @@
   jash.js allows you to more easily use node as a shell scripting facility.
-  It will collate all
+  It will collate all output in an easy to consume way - avoiding pitfalls
+  that can cause you to lose data.
  
-  You can then call any commandline utility like this:
+  You can call any commandline utility like this: (Why '$'?  It's a shell prompt!)
  
   	var $ = require('jash');
   	$.ls('-l', '/tmp/foo', function(statusCode, stdout, stderr) {
@@ -49,4 +50,3 @@
 	stderr = function(data) ...
 
 
-Why $?  You're running shell commands!
