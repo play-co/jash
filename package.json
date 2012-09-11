@@ -1,9 +1,9 @@
 {
-  "author": "",
+  "author": "Tom Fairfield",
   "name": "jash",
   "description": "node for commandline scripting",
   "version": "0.1.0",
-  "homepage": "http://github.com/gameclosure/",
+  "homepage": "http://github.com/gameclosure/jash",
   "repository": {
     "type": "git",
     "url": "git://github.com/gameclosure/jash.git"
