@@ -8,16 +8,16 @@
   	$.ls('-l', '/tmp/foo', function(statusCode, stdout, stderr) {
  		console.log('files are', stdout);
   	}
-
-	var getStreamConsumer = function() {
-			return function(data) {
-				console.log('I got some data!', data);
-			};
-	};
 	
   or with your own callbacks for stdout and stderr.  This is nice for 
   long running processes and the like
 
+	var getStreamConsumer = function() {
+		return function(data) {
+			console.log('I got some data!', data);
+		};
+	};
+	
 	$.tail('-f', '/var/log/foo.log', getStreamConsumer(), getStreamConsumer());
 
   Since the child process is returned, you can also do whatever you want:
