@@ -27,8 +27,15 @@ var spawn = require('child_process').spawn;
  * in an array.
  */
 function readdir(path) {
-	var files = fs.readdirSync(path);
-	return _.map(files, function(f) { return path + '/' + f; });
+	var stats = fs.lstatSync(path);
+	var files = null;
+	if (stats.isDirectory()) {
+		fileNames = fs.readdirSync(path);
+		files = _.map(fileNames, function(f) { return path + '/' + f; });
+	} else {
+		files = [];
+	}
+	return files;
 }
 
 /*
