@@ -143,7 +143,8 @@ function addBinaries(binaries) {
 			}
 
 			//if the last arg is an object, it's the options object
-			if (typeof args[args.length-1] == 'object') {
+			var lastArg = args[args.length-1];
+			if (typeof lastArg == 'object' && !lastArg.length) {
 				options = args.pop();
 			}
 			//if the first argument was an array, the args were passed as
